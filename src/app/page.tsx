@@ -4,6 +4,7 @@ import { Pitch } from "@/components/fut/Pitch";
 import { SquadSummaryCard } from "@/components/fut/SquadSummaryCard";
 import { StatTile } from "@/components/fut/StatTile";
 import { TopRatedList, ValuePicksGrid } from "@/components/home/PlayerLists";
+import { HeroAside } from "@/components/home/HeroAside";
 import { SectionHeader } from "@/components/site/Section";
 import { MarketRow } from "@/components/market/MarketRow";
 import { Button } from "@/components/ui/button";
@@ -76,6 +77,8 @@ export default function Home() {
               </Link>
             ))}
           </div>
+
+          <HeroAside />
 
           {/* numbers strip */}
           <div className="mt-auto grid grid-cols-4 gap-4 border-t border-[var(--color-line)] pt-6">

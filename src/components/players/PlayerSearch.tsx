@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Search } from "lucide-react";
-import { Input, Select, Skeleton } from "@/components/ui/primitives";
+import { Input, Skeleton } from "@/components/ui/primitives";
+import { Select, SelectItem } from "@/components/ui/select";
 import { PlayerRow } from "@/components/fut/PlayerRow";
 import type { PlayerView } from "@/components/fut/types";
 
@@ -63,8 +64,9 @@ export function PlayerSearch({
 
   return (
     <div>
-      {/* filters */}
-      <div className="sticky top-16 z-10 -mx-1 mb-4 rounded-2xl bg-[var(--color-bg)]/85 px-1 py-2 backdrop-blur">
+      {/* filters — pinned to the top of the dialog's scroll area. The host dialog passes
+          bodyClassName="pt-0" so this opaque, full-bleed bar pins flush with no bleed above it. */}
+      <div className="sticky top-0 z-10 -mx-4 mb-3 border-b border-[var(--color-line)] bg-[var(--color-surface)] px-4 py-3">
         <div className="relative">
           <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-faint)]" />
           <Input
@@ -74,38 +76,38 @@ export function PlayerSearch({
             className="h-12 pl-10 text-base"
           />
         </div>
-        <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-5">
-          <Select value={position} onChange={(e) => setPosition(e.target.value)}>
-            <option value="">All positions</option>
+        <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
+          <Select value={position} onValueChange={setPosition} aria-label="Position">
+            <SelectItem value="">All positions</SelectItem>
             {POSITIONS.map((p) => (
-              <option key={p} value={p}>{p}</option>
+              <SelectItem key={p} value={p}>{p}</SelectItem>
             ))}
           </Select>
-          <Select value={league} onChange={(e) => setLeague(e.target.value)}>
-            <option value="">All leagues</option>
+          <Select value={league} onValueChange={setLeague} aria-label="League">
+            <SelectItem value="">All leagues</SelectItem>
             {leagues.map((l) => (
-              <option key={l} value={l}>{l}</option>
+              <SelectItem key={l} value={l}>{l}</SelectItem>
             ))}
           </Select>
-          <Select value={nation} onChange={(e) => setNation(e.target.value)}>
-            <option value="">All nations</option>
+          <Select value={nation} onValueChange={setNation} aria-label="Nation">
+            <SelectItem value="">All nations</SelectItem>
             {nations.map((n) => (
-              <option key={n} value={n}>{n}</option>
+              <SelectItem key={n} value={n}>{n}</SelectItem>
             ))}
           </Select>
-          <Select value={minRating} onChange={(e) => setMinRating(e.target.value)}>
-            <option value="">Any rating</option>
+          <Select value={minRating} onValueChange={setMinRating} aria-label="Minimum rating">
+            <SelectItem value="">Any rating</SelectItem>
             {[90, 87, 85, 83, 80, 75].map((r) => (
-              <option key={r} value={r}>{r}+ rated</option>
+              <SelectItem key={r} value={String(r)}>{r}+ rated</SelectItem>
             ))}
           </Select>
-          <Select value={sort} onChange={(e) => setSort(e.target.value)}>
-            <option value="rating">Top rated</option>
-            <option value="price">Cheapest</option>
-            <option value="pace">Fastest</option>
-            <option value="shooting">Best shooting</option>
-            <option value="passing">Best passing</option>
-            <option value="dribbling">Best dribbling</option>
+          <Select value={sort} onValueChange={setSort} aria-label="Sort">
+            <SelectItem value="rating">Top rated</SelectItem>
+            <SelectItem value="price">Cheapest</SelectItem>
+            <SelectItem value="pace">Fastest</SelectItem>
+            <SelectItem value="shooting">Best shooting</SelectItem>
+            <SelectItem value="passing">Best passing</SelectItem>
+            <SelectItem value="dribbling">Best dribbling</SelectItem>
           </Select>
         </div>
         <p className="mt-2 px-1 text-xs text-[var(--color-faint)]">

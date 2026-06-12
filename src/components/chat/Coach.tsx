@@ -70,6 +70,13 @@ export function Coach() {
 
   const busy = status === "submitted" || status === "streaming";
 
+  // Pre-fill from a /build?ask=… deep link (e.g. the home "Ask the Gaffer" prompts).
+  useEffect(() => {
+    const ask = new URLSearchParams(window.location.search).get("ask");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (ask) setInput(ask);
+  }, []);
+
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, status]);

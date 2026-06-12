@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Search, ChevronLeft, ChevronRight, ArrowUp, ArrowDown } from "lucide-react";
-import { Input, Select, Skeleton } from "@/components/ui/primitives";
+import { Input, Skeleton } from "@/components/ui/primitives";
+import { Select, SelectItem } from "@/components/ui/select";
 import { PlayerDetailSheet } from "@/components/fut/PlayerDetailSheet";
 import { RARITY } from "@/components/fut/rarity";
 import { cn, formatCoins } from "@/lib/utils";
@@ -139,28 +140,28 @@ export function PlayerTable({ leagues, nations }: { leagues: string[]; nations: 
           />
         </div>
         <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
-          <Select value={position} onChange={(e) => setPosition(e.target.value)}>
-            <option value="">All positions</option>
+          <Select value={position} onValueChange={setPosition} aria-label="Position">
+            <SelectItem value="">All positions</SelectItem>
             {POSITIONS.map((p) => (
-              <option key={p} value={p}>{p}</option>
+              <SelectItem key={p} value={p}>{p}</SelectItem>
             ))}
           </Select>
-          <Select value={league} onChange={(e) => setLeague(e.target.value)}>
-            <option value="">All leagues</option>
+          <Select value={league} onValueChange={setLeague} aria-label="League">
+            <SelectItem value="">All leagues</SelectItem>
             {leagues.map((l) => (
-              <option key={l} value={l}>{l}</option>
+              <SelectItem key={l} value={l}>{l}</SelectItem>
             ))}
           </Select>
-          <Select value={nation} onChange={(e) => setNation(e.target.value)}>
-            <option value="">All nations</option>
+          <Select value={nation} onValueChange={setNation} aria-label="Nation">
+            <SelectItem value="">All nations</SelectItem>
             {nations.map((n) => (
-              <option key={n} value={n}>{n}</option>
+              <SelectItem key={n} value={n}>{n}</SelectItem>
             ))}
           </Select>
-          <Select value={minRating} onChange={(e) => setMinRating(e.target.value)}>
-            <option value="">Any rating</option>
+          <Select value={minRating} onValueChange={setMinRating} aria-label="Minimum rating">
+            <SelectItem value="">Any rating</SelectItem>
             {[90, 87, 85, 83, 80, 75].map((r) => (
-              <option key={r} value={r}>{r}+ rated</option>
+              <SelectItem key={r} value={String(r)}>{r}+ rated</SelectItem>
             ))}
           </Select>
         </div>

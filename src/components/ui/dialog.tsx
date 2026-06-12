@@ -10,10 +10,14 @@ export const DialogTrigger = DialogPrimitive.Trigger;
 
 export function DialogContent({
   className,
+  bodyClassName,
   children,
   title,
   ...props
-}: React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & { title?: string }) {
+}: React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
+  title?: string;
+  bodyClassName?: string;
+}) {
   return (
     <DialogPrimitive.Portal>
       <DialogPrimitive.Overlay className="anim-fade fixed inset-0 z-50 bg-black/75 backdrop-blur-md" />
@@ -32,7 +36,7 @@ export function DialogContent({
             <X className="h-4 w-4" />
           </DialogPrimitive.Close>
         </div>
-        <div className="min-h-0 flex-1 overflow-y-auto p-4">{children}</div>
+        <div className={cn("min-h-0 flex-1 overflow-y-auto p-4", bodyClassName)}>{children}</div>
       </DialogPrimitive.Content>
     </DialogPrimitive.Portal>
   );

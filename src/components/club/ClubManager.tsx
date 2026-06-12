@@ -135,10 +135,7 @@ export function ClubManager({ leagues, nations }: { leagues: string[]; nations: 
       )}
 
       <Dialog open={addOpen} onOpenChange={setAddOpen}>
-        <DialogContent title="Add players to your club">
-          <p className="mb-3 text-xs text-[var(--color-muted)]">
-            Tap a player to add or remove. Added players show a check.
-          </p>
+        <DialogContent title="Add players to your club" bodyClassName="pt-0">
           <PlayerSearch
             leagues={leagues}
             nations={nations}

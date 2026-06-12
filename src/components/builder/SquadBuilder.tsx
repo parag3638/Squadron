@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { Wand2, Loader2, Trash2, Save, Share2, Check } from "lucide-react";
 import { Pitch } from "@/components/fut/Pitch";
 import { Button } from "@/components/ui/button";
-import { Select, Input, Kbd } from "@/components/ui/primitives";
+import { Input, Kbd } from "@/components/ui/primitives";
+import { Select, SelectItem } from "@/components/ui/select";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { PlayerSearch } from "@/components/players/PlayerSearch";
 import { SquadAnalysis } from "./SquadAnalysis";
@@ -201,14 +202,14 @@ export function SquadBuilder({
     <div>
       {/* controls */}
       <div className="mb-4 flex flex-wrap items-center gap-2">
-        <Select value={formation} onChange={(e) => changeFormation(e.target.value)} className="w-auto">
+        <Select value={formation} onValueChange={changeFormation} className="w-auto" aria-label="Formation">
           {FORMATION_NAMES.map((f) => (
-            <option key={f} value={f}>{f}</option>
+            <SelectItem key={f} value={f}>{f}</SelectItem>
           ))}
         </Select>
-        <Select value={ratingTarget} onChange={(e) => setRatingTarget(e.target.value)} className="w-auto">
+        <Select value={ratingTarget} onValueChange={setRatingTarget} className="w-auto" aria-label="Rating target">
           {[88, 86, 85, 84, 83, 82, 80].map((r) => (
-            <option key={r} value={r}>{r} rated</option>
+            <SelectItem key={r} value={String(r)}>{r} rated</SelectItem>
           ))}
         </Select>
         <Button onClick={autoBuild} disabled={building} size="sm" className="h-9">
@@ -221,15 +222,16 @@ export function SquadBuilder({
         {squads.length > 0 && (
           <Select
             value=""
-            onChange={(e) => {
-              const sq = squads.find((s) => s.name === e.target.value);
+            onValueChange={(v) => {
+              const sq = squads.find((s) => s.name === v);
               if (sq) loadFromIds(sq.formation, sq.playerIds);
             }}
             className="w-auto"
+            aria-label="Load saved squad"
           >
-            <option value="">Load saved…</option>
+            <SelectItem value="">Load saved…</SelectItem>
             {squads.map((s) => (
-              <option key={s.name} value={s.name}>{s.name}</option>
+              <SelectItem key={s.name} value={s.name}>{s.name}</SelectItem>
             ))}
           </Select>
         )}
@@ -256,11 +258,14 @@ export function SquadBuilder({
       <SquadAnalysis slots={slots} />
 
       <Dialog open={pickIndex !== null} onOpenChange={(o) => !o && setPickIndex(null)}>
-        <DialogContent title={`${current ? "Replace" : "Add"} player${pickPosition ? ` · ${pickPosition}` : ""}`}>
+        <DialogContent
+          title={`${current ? "Replace" : "Add"} player${pickPosition ? ` · ${pickPosition}` : ""}`}
+          bodyClassName="pt-0"
+        >
           {current && (
             <Button
               variant="secondary"
-              className="mb-3 w-full"
+              className="mb-3 mt-3 w-full"
               onClick={() => {
                 if (pickIndex !== null) clearSlot(pickIndex);
                 setPickIndex(null);

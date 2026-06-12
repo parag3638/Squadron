@@ -74,35 +74,6 @@ export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttribute
 );
 Input.displayName = "Input";
 
-/* ---- Select (native, styled) ---- */
-export const Select = React.forwardRef<
-  HTMLSelectElement,
-  React.SelectHTMLAttributes<HTMLSelectElement>
->(({ className, children, ...props }, ref) => (
-  <div className="relative">
-    <select
-      ref={ref}
-      className={cn(
-        "h-9 w-full appearance-none rounded-[var(--radius-sm)] bg-[var(--color-surface-2)] pl-3 pr-9 text-[13px] text-[var(--color-fg)] border border-[var(--color-line)] transition-colors focus:outline-none focus:border-[var(--color-accent-line)]",
-        className,
-      )}
-      {...props}
-    >
-      {children}
-    </select>
-    <svg
-      className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-faint)]"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <path d="m6 9 6 6 6-6" />
-    </svg>
-  </div>
-));
-Select.displayName = "Select";
-
 /* ---- Skeleton (shimmer) ---- */
 export function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
