@@ -1,0 +1,296 @@
+@import "tailwindcss";
+
+/* ============================================================================
+   Squadron — Design system v2  ·  "Refined Instrument"
+   Inspired by Fey / Wealthsimple (Tiago Costa). Near-black canvas, hairline
+   borders with a top-edge highlight, refined grotesque + mono tabular numerals,
+   surgical use of one green accent, calm precise motion.
+   ========================================================================== */
+@theme {
+  /* Canvas & elevation */
+  --color-bg: #08090b;
+  --color-bg-2: #0b0c0f;
+  --color-surface: #101216;
+  --color-surface-2: #151821;
+  --color-surface-3: #1b1f29;
+
+  /* Hairlines — white at low alpha (the signature) */
+  --color-line: rgba(255, 255, 255, 0.07);
+  --color-line-2: rgba(255, 255, 255, 0.12);
+  --color-line-3: rgba(255, 255, 255, 0.2);
+
+  /* Text */
+  --color-fg: #ecedf0;
+  --color-muted: #8b919d;
+  --color-faint: #565c67;
+
+  /* Accent — refined emerald, used sparingly */
+  --color-accent: #3ddc84;
+  --color-accent-2: #28b86c;
+  --color-accent-ink: #03140b;
+  --color-accent-soft: rgba(61, 220, 132, 0.12);
+  --color-accent-line: rgba(61, 220, 132, 0.32);
+
+  /* Semantic */
+  --color-up: #46d196;
+  --color-down: #f0726f;
+  --color-good: #46d196;
+  --color-bad: #f0726f;
+  --color-warn: #e6b462;
+  --color-info: #6aa6ff;
+
+  /* Rarity / tiers — muted, elegant */
+  --color-gold: #e6c56c;
+  --color-silver: #c2c8d2;
+  --color-bronze: #c6926a;
+  --color-icon: #ece2c8;
+  --color-hero: #c77dff;
+
+  /* Type — typewriter everywhere (closest free match to Secret Service Typewriter) */
+  --font-sans: var(--font-typewriter), ui-monospace, "Courier New", monospace;
+  --font-mono: var(--font-typewriter), ui-monospace, "Courier New", monospace;
+  --font-display: var(--font-typewriter), ui-monospace, "Courier New", monospace;
+
+  /* Radii */
+  --radius: 14px;
+  --radius-sm: 10px;
+  --radius-lg: 20px;
+  --radius-card: 14px;
+
+  /* Motion */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+   ------------------------------------------------------------------------- */
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4 {
+    letter-spacing: -0.02em;
+  }
+
+  .tnum {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-accent-ink);
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-line-2);
+    border-radius: 999px;
+    border: 3px solid var(--color-bg);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-line-3);
+  }
+
+  :focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--color-bg),
+      0 0 0 3.5px var(--color-accent-line);
+    border-radius: 8px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Components — the signature surfaces & primitives
+   ------------------------------------------------------------------------- */
+@layer components {
+  /* The panel: subtle top-lit gradient + hairline border + inset highlight + soft shadow */
+  .panel {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0) 42%),
+      var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.05),
+      0 1px 2px rgba(0, 0, 0, 0.35),
+      0 10px 28px -16px rgba(0, 0, 0, 0.6);
+  }
+
+  .panel-2 {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0) 45%),
+      var(--color-surface-2);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .panel-interactive {
+    transition:
+      border-color 0.25s var(--ease-out-soft),
+      transform 0.25s var(--ease-out-soft),
+      box-shadow 0.25s var(--ease-out-soft),
+      background 0.25s var(--ease-out-soft);
+  }
+  .panel-interactive:hover {
+    border-color: var(--color-line-2);
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+      0 2px 4px rgba(0, 0, 0, 0.35),
+      0 18px 40px -18px rgba(0, 0, 0, 0.7);
+  }
+
+  /* mono micro-label — Fey-style uppercase data label */
+  .label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-faint);
+  }
+
+  .hairline {
+    border-top: 1px solid var(--color-line);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Utilities — atmosphere & motion
+   ------------------------------------------------------------------------- */
+@layer utilities {
+  .bg-app {
+    background:
+      radial-gradient(120% 75% at 50% -15%, #0e1116 0%, transparent 55%),
+      radial-gradient(90% 60% at 100% 0%, #0b1410 0%, transparent 50%),
+      var(--color-bg);
+  }
+
+  .glass {
+    background: color-mix(in srgb, var(--color-bg) 68%, transparent);
+    backdrop-filter: blur(18px) saturate(1.4);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  }
+
+  .glow-accent {
+    box-shadow:
+      0 0 0 1px var(--color-accent-line),
+      0 0 44px -12px var(--color-accent-soft);
+  }
+
+  .pitch-turf {
+    background:
+      repeating-linear-gradient(
+        180deg,
+        #0c130f 0px,
+        #0c130f calc(100% / 12),
+        #0a1009 calc(100% / 12),
+        #0a1009 calc(100% / 6)
+      );
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .rise {
+    animation: rise 0.7s var(--ease-out-soft) both;
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: scale(0.96) translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .anim-pop {
+    animation: pop-in 0.22s var(--ease-out-soft);
+  }
+
+  @keyframes sheet-in {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  .anim-sheet {
+    animation: sheet-in 0.34s var(--ease-out-soft);
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  .anim-fade {
+    animation: fade-in 0.25s ease;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

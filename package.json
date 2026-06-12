@@ -1,0 +1,48 @@
+{
+  "name": "fut26-assistant",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "import:data": "tsx scripts/import-players.ts"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^3.0.71",
+    "@ai-sdk/react": "^3.0.204",
+    "@radix-ui/react-dialog": "^1.1.16",
+    "@radix-ui/react-popover": "^1.1.16",
+    "@radix-ui/react-scroll-area": "^1.2.11",
+    "@radix-ui/react-select": "^2.3.0",
+    "@radix-ui/react-separator": "^1.1.9",
+    "@radix-ui/react-slot": "^1.2.5",
+    "@radix-ui/react-tabs": "^1.1.14",
+    "@radix-ui/react-tooltip": "^1.2.9",
+    "ai": "^6.0.202",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.17.0",
+    "motion": "^12.40.0",
+    "next": "16.2.9",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "tailwind-merge": "^3.6.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.9",
+    "tailwindcss": "^4",
+    "tsx": "^4.22.4",
+    "typescript": "^5",
+    "vitest": "^4.1.8"
+  }
+}
