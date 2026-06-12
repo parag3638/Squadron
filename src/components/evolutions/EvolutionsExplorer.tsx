@@ -115,9 +115,9 @@ export function EvolutionsExplorer({ evolutions }: { evolutions: Evolution[] }) 
                 {data.candidates.map((c) => (
                   <div key={c.before.id} className="flex flex-col items-center">
                     <div className="mb-1.5 flex items-center gap-1 text-xs font-semibold text-[var(--color-faint)]">
-                      <span className="tabular-nums">{c.before.rating}</span>
+                      <span className="cell-num">{c.before.rating}</span>
                       <ArrowRight className="h-3 w-3 text-[var(--color-accent)]" />
-                      <span className="tabular-nums text-[var(--color-good)]">{c.after.rating}</span>
+                      <span className="cell-num text-[var(--color-good)]">{c.after.rating}</span>
                     </div>
                     <PlayerCard player={c.after} size="md" showStats />
                   </div>

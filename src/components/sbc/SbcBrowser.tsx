@@ -5,6 +5,7 @@ import { Loader2, Trophy, Wand2, AlertTriangle, Check } from "lucide-react";
 import { Badge } from "@/components/ui/primitives";
 import { Pitch } from "@/components/fut/Pitch";
 import { useClub } from "@/lib/club/store";
+import { toast } from "@/lib/ui/toast";
 import { cn, formatCoins } from "@/lib/utils";
 import type { Sbc } from "@/lib/data/sbcs";
 import type { SbcConstraints } from "@/lib/fut/sbc";
@@ -42,6 +43,7 @@ export function SbcBrowser({ sbcs }: { sbcs: Sbc[] }) {
     setLoading(true);
     setResult(null);
     panelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const toastId = toast.loading(`Solving ${sbc.name}…`);
     try {
       const res = await fetch("/api/solve", {
         method: "POST",
@@ -52,6 +54,16 @@ export function SbcBrowser({ sbcs }: { sbcs: Sbc[] }) {
         }),
       }).then((r) => r.json());
       setResult({ ...res, sbc: { name: sbc.name, reward: sbc.reward } });
+      if (res.ok) {
+        toast.success("SBC solved", {
+          id: toastId,
+          description: `${formatCoins(res.cost)} · ${res.rating} rated`,
+        });
+      } else {
+        toast.error("No clean solution", { id: toastId, description: "Showing the closest attempt" });
+      }
+    } catch {
+      toast.error("Solve failed", { id: toastId });
     } finally {
       setLoading(false);
     }

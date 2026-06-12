@@ -1,5 +1,5 @@
 import { CalendarDays, Dot } from "lucide-react";
-import { Badge } from "@/components/ui/primitives";
+import { Badge, LiveDot } from "@/components/ui/primitives";
 import { SectionHeader } from "@/components/site/Section";
 import { NewsDigest } from "@/components/news/NewsDigest";
 import { getPromos, getNews, type PromoStatus } from "@/lib/data/news";
@@ -37,7 +37,7 @@ export default function NewsPage() {
           {promos.map((p) => (
             <div
               key={p.id}
-              className="flex items-start gap-4 panel p-4"
+              className="flex items-start gap-4 panel panel-interactive p-4"
             >
               <span
                 className={`mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-xl ${
@@ -53,12 +53,18 @@ export default function NewsPage() {
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <h3 className="font-display text-base font-bold">{p.name}</h3>
-                  <Badge variant={STATUS[p.status].variant}>{STATUS[p.status].label}</Badge>
+                  {p.status === "live" ? (
+                    <Badge variant="good" className="gap-1.5">
+                      <LiveDot /> Live
+                    </Badge>
+                  ) : (
+                    <Badge variant={STATUS[p.status].variant}>{STATUS[p.status].label}</Badge>
+                  )}
                   <span className="text-[11px] uppercase tracking-wider text-[var(--color-faint)]">{p.type}</span>
                 </div>
                 <p className="mt-1 text-sm text-[var(--color-muted)]">{p.description}</p>
               </div>
-              <div className="shrink-0 text-right text-xs text-[var(--color-faint)]">
+              <div className="shrink-0 text-right text-xs text-[var(--color-faint)] cell-num">
                 {fmt(p.start)} – {fmt(p.end)}
               </div>
             </div>
@@ -71,11 +77,11 @@ export default function NewsPage() {
         <SectionHeader title="Latest news" />
         <div className="grid gap-3 sm:grid-cols-2">
           {news.map((n) => (
-            <article key={n.id} className="panel p-5">
+            <article key={n.id} className="panel panel-interactive p-5">
               <div className="flex items-center gap-2 text-[11px] text-[var(--color-faint)]">
                 <Badge variant="accent">{n.tag}</Badge>
                 <Dot className="h-3 w-3" />
-                {fmt(n.date)}
+                <span className="cell-num">{fmt(n.date)}</span>
               </div>
               <h3 className="mt-2.5 font-display text-base font-bold leading-snug">{n.title}</h3>
               <p className="mt-1.5 text-sm leading-relaxed text-[var(--color-muted)]">{n.summary}</p>

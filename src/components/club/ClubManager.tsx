@@ -5,8 +5,11 @@ import { Lock, Unlock, X, UserPlus, Trash2, Plus } from "lucide-react";
 import { useClub } from "@/lib/club/store";
 import { PlayerSearch } from "@/components/players/PlayerSearch";
 import { RARITY } from "@/components/fut/rarity";
+import { StatTile } from "@/components/fut/StatTile";
+import { PlayerHoverCard } from "@/components/fut/PlayerHoverCard";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { toast } from "@/lib/ui/toast";
 import { cn, formatCoins } from "@/lib/utils";
 import type { PlayerView } from "@/components/fut/types";
 
@@ -46,7 +49,11 @@ export function ClubManager({ leagues, nations }: { leagues: string[]; nations: 
         <div className="flex items-center gap-2">
           {entries.length > 0 && (
             <button
-              onClick={clear}
+              onClick={() => {
+                const count = entries.length;
+                clear();
+                toast("Club cleared", { description: `${count} player${count === 1 ? "" : "s"} removed` });
+              }}
               className="inline-flex items-center gap-1 text-xs text-[var(--color-faint)] transition-colors hover:text-[var(--color-bad)]"
             >
               <Trash2 className="h-3 w-3" /> Clear
@@ -74,39 +81,48 @@ export function ClubManager({ leagues, nations }: { leagues: string[]; nations: 
           {ordered.map((p) => {
             const ut = untradeableSet.has(p.id);
             return (
-              <div key={p.id} className="panel flex items-center gap-3 px-3.5 py-2.5">
-                <span className="w-7 font-display text-lg font-bold tabular-nums" style={{ color: RARITY[p.rarity].accent }}>
-                  {p.rating}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium">{p.name}</p>
-                  <p className="truncate text-xs text-[var(--color-faint)]">
-                    {p.positions[0]} · {p.club}
-                  </p>
+              <PlayerHoverCard key={p.id} player={p} side="right" align="center">
+                <div className="panel panel-interactive flex items-center gap-3 px-3.5 py-2.5">
+                  <span className="w-7 cell-num text-lg font-bold" style={{ color: RARITY[p.rarity].accent }}>
+                    {p.rating}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{p.name}</p>
+                    <p className="truncate text-xs text-[var(--color-faint)]">
+                      {p.positions[0]} · {p.club}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => toggleUntradeable(p.id)}
+                    title={ut ? "Untradeable" : "Tradeable"}
+                    className={cn(
+                      "inline-flex items-center gap-1 rounded-full border px-2 py-1 text-[10px] font-medium transition-colors",
+                      ut
+                        ? "border-[var(--color-warn)]/30 bg-[var(--color-warn)]/12 text-[var(--color-warn)]"
+                        : "border-[var(--color-line)] bg-[var(--color-surface-2)] text-[var(--color-faint)] hover:text-[var(--color-fg)]",
+                    )}
+                  >
+                    {ut ? <Lock className="h-3 w-3" /> : <Unlock className="h-3 w-3" />}
+                    {ut ? "UT" : "Tradeable"}
+                  </button>
+                  <span className="w-14 text-right cell-num text-xs text-[var(--color-muted)]">
+                    {ut ? "—" : formatCoins(p.price)}
+                  </span>
+                  <button
+                    onClick={() => {
+                      remove(p.id);
+                      toast("Removed from club", {
+                        description: p.name,
+                        action: { label: "Undo", onClick: () => add(p.id) },
+                      });
+                    }}
+                    aria-label={`Remove ${p.name}`}
+                    className="rounded-full p-1 text-[var(--color-faint)] transition-colors hover:bg-[var(--color-surface-2)] hover:text-[var(--color-bad)]"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
                 </div>
-                <button
-                  onClick={() => toggleUntradeable(p.id)}
-                  title={ut ? "Untradeable" : "Tradeable"}
-                  className={cn(
-                    "inline-flex items-center gap-1 rounded-full border px-2 py-1 text-[10px] font-medium transition-colors",
-                    ut
-                      ? "border-[var(--color-warn)]/30 bg-[var(--color-warn)]/12 text-[var(--color-warn)]"
-                      : "border-[var(--color-line)] bg-[var(--color-surface-2)] text-[var(--color-faint)] hover:text-[var(--color-fg)]",
-                  )}
-                >
-                  {ut ? <Lock className="h-3 w-3" /> : <Unlock className="h-3 w-3" />}
-                  {ut ? "UT" : "Tradeable"}
-                </button>
-                <span className="w-14 text-right font-mono text-xs text-[var(--color-muted)]">
-                  {ut ? "—" : formatCoins(p.price)}
-                </span>
-                <button
-                  onClick={() => remove(p.id)}
-                  className="rounded-full p-1 text-[var(--color-faint)] transition-colors hover:bg-[var(--color-surface-2)] hover:text-[var(--color-bad)]"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
+              </PlayerHoverCard>
             );
           })}
         </div>
@@ -138,10 +154,7 @@ export function ClubManager({ leagues, nations }: { leagues: string[]; nations: 
 function Stat({ label, value, accent }: { label: string; value: string; accent?: string }) {
   return (
     <div className="panel px-4 py-3">
-      <div className="font-display text-2xl font-bold tabular-nums" style={{ color: accent }}>
-        {value}
-      </div>
-      <div className="label mt-1">{label}</div>
+      <StatTile align="start" size="md" value={value} label={label} color={accent} />
     </div>
   );
 }

@@ -284,9 +284,7 @@
    ------------------------------------------------------------------------- */
 @layer utilities {
   .bg-app {
-    background:
-      radial-gradient(125% 80% at 50% -12%, #0f1218 0%, transparent 62%),
-      var(--color-bg);
+    background: var(--color-bg);
   }
   /* Filmic grain — the single biggest "expensive product" tell. Zero JS. */
   .bg-app::before {

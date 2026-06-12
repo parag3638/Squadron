@@ -204,7 +204,7 @@ export function PlayerTable({ leagues, nations }: { leagues: string[]; nations: 
                 <span className="w-5 text-center font-mono text-[11px] text-[var(--color-faint)]">
                   {page * PAGE_SIZE + i + 1}
                 </span>
-                <span className="w-9 text-center font-display text-lg font-bold tabular-nums" style={{ color: RARITY[p.rarity].accent }}>
+                <span className="w-9 cell-num text-center text-lg font-bold" style={{ color: RARITY[p.rarity].accent }}>
                   {p.rating}
                 </span>
                 <div className="min-w-0 flex-1">
