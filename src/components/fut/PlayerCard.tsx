@@ -80,12 +80,18 @@ export function PlayerCard({
         className="pointer-events-none absolute -right-10 -top-10 h-24 w-24 rounded-full opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-60"
         style={{ background: r.sheen }}
       />
+      {size !== "sm" && (
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -inset-y-6 -left-1/3 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 transition-all duration-[800ms] ease-[var(--ease-out-soft)] group-hover:left-[130%] group-hover:opacity-100"
+        />
+      )}
 
       {/* rating + position + crests */}
       <div className="flex items-start justify-between">
         <div className="flex flex-col leading-none">
           <span
-            className={cn("font-display font-bold tabular-nums tracking-tight", s.rating)}
+            className={cn("font-mono font-bold tabular-nums tracking-tight", s.rating)}
             style={{ color: r.accent }}
           >
             {player.rating}

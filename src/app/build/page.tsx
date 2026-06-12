@@ -12,7 +12,7 @@ export default function BuildPage() {
   );
 
   return (
-    <div className="mx-auto max-w-7xl px-5 pt-8 sm:px-8">
+    <div className="mx-auto max-w-[96rem] px-5 pt-8 sm:px-8">
       <header className="mb-5">
         <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">Squad Builder</h1>
         <p className="mt-1.5 max-w-2xl text-sm text-[var(--color-muted)]">

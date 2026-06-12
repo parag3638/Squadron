@@ -1,6 +1,9 @@
+"use client";
+
 import { Check } from "lucide-react";
 import { cn, formatCoins } from "@/lib/utils";
 import { RARITY } from "./rarity";
+import { PlayerHoverCard } from "./PlayerHoverCard";
 import type { PlayerView } from "./types";
 
 const STATS: { key: keyof PlayerView; label: string }[] = [
@@ -25,6 +28,7 @@ export function PlayerRow({
 }) {
   const r = RARITY[player.rarity];
   return (
+    <PlayerHoverCard player={player} side="right" align="start">
     <button
       type="button"
       onClick={onClick}
@@ -40,7 +44,7 @@ export function PlayerRow({
         </span>
       )}
       <div className="flex w-11 shrink-0 flex-col items-center">
-        <span className="font-display text-[22px] font-bold tabular-nums leading-none" style={{ color: r.accent }}>
+        <span className="font-mono text-[22px] font-bold tabular-nums leading-none" style={{ color: r.accent }}>
           {player.rating}
         </span>
         <span className="label mt-1 !text-[8px]">{player.positions.slice(0, 2).join(" ")}</span>
@@ -69,5 +73,6 @@ export function PlayerRow({
         </span>
       </div>
     </button>
+    </PlayerHoverCard>
   );
 }

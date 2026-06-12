@@ -5,6 +5,8 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { ArrowUp, Sparkles, Square, Loader2, AlertTriangle, Users } from "lucide-react";
 import { Pitch } from "@/components/fut/Pitch";
+import { PlayerHoverCard } from "@/components/fut/PlayerHoverCard";
+import { RARITY } from "@/components/fut/rarity";
 import { Button } from "@/components/ui/button";
 import { cn, formatCoins } from "@/lib/utils";
 import type { ChatMessage } from "@/app/api/chat/route";
@@ -36,21 +38,23 @@ function SquadResult({ data }: { data: ShapedSolve & { sbc?: { name: string } } 
 function PlayerList({ data }: { data: { players: PlayerView[]; total: number } }) {
   if (!data?.players) return null;
   return (
-    <div className="mt-2 overflow-hidden rounded-xl border border-[var(--color-line)]">
+    <div className="list-flush mt-2 overflow-hidden rounded-xl border border-[var(--color-line)]">
       {data.players.slice(0, 8).map((p) => (
-        <div
-          key={p.id}
-          className="flex items-center gap-3 bg-[var(--color-surface)] px-3 py-2 [&:not(:last-child)]:border-b [&:not(:last-child)]:border-[var(--color-line)]"
-        >
-          <span className="w-7 font-display text-base font-extrabold tabular-nums text-[var(--color-accent)]">
-            {p.rating}
-          </span>
-          <span className="flex-1 truncate text-sm font-medium">{p.name}</span>
-          <span className="text-xs text-[var(--color-faint)]">{p.positions[0]}</span>
-          <span className="w-16 text-right font-mono text-xs text-[var(--color-muted)]">
-            {formatCoins(p.price)}
-          </span>
-        </div>
+        <PlayerHoverCard key={p.id} player={p} side="left" align="center">
+          <div className="data-row cursor-default bg-[var(--color-surface)]">
+            <span
+              className="w-7 shrink-0 cell-num text-base font-bold leading-none"
+              style={{ color: RARITY[p.rarity].accent }}
+            >
+              {p.rating}
+            </span>
+            <span className="flex-1 truncate text-sm font-medium">{p.name}</span>
+            <span className="text-xs text-[var(--color-faint)]">{p.positions[0]}</span>
+            <span className="w-16 shrink-0 text-right cell-num text-xs text-[var(--color-muted)]">
+              {formatCoins(p.price)}
+            </span>
+          </div>
+        </PlayerHoverCard>
       ))}
     </div>
   );

@@ -11,6 +11,7 @@ import { marketFields } from "@/lib/market/pricing";
 import { useClub } from "@/lib/club/store";
 import { useWatchlist } from "@/lib/market/watchlist";
 import { useCompare } from "@/lib/compare/store";
+import { toast } from "@/lib/ui/toast";
 import { formatCoins, cn } from "@/lib/utils";
 import type { PlayerView } from "./types";
 
@@ -60,7 +61,7 @@ function Body({ player }: { player: PlayerView }) {
     <div className="p-5">
       <div className="flex items-start gap-4">
         <div className="flex flex-col items-center">
-          <span className="font-display text-5xl font-bold tabular-nums leading-none" style={{ color: r.accent }}>
+          <span className="font-mono text-5xl font-bold tabular-nums leading-none" style={{ color: r.accent }}>
             {player.rating}
           </span>
           <span className="label mt-2">{player.positions[0]}</span>
@@ -77,7 +78,21 @@ function Body({ player }: { player: PlayerView }) {
       </div>
 
       <div className="mt-5 grid grid-cols-2 gap-2">
-        <Button variant={owned ? "secondary" : "primary"} onClick={() => (owned ? club.remove(player.id) : club.add(player.id))}>
+        <Button
+          variant={owned ? "secondary" : "primary"}
+          onClick={() => {
+            if (owned) {
+              club.remove(player.id);
+              toast("Removed from club", { description: player.name });
+            } else {
+              club.add(player.id);
+              toast.success("Added to club", {
+                description: player.name,
+                action: { label: "Undo", onClick: () => club.remove(player.id) },
+              });
+            }
+          }}
+        >
           {owned ? <><Check className="h-4 w-4" /> In club</> : <><Plus className="h-4 w-4" /> Add to club</>}
         </Button>
         <Button variant="secondary" onClick={() => watch.toggle(player.id)}>
@@ -105,10 +120,10 @@ function Body({ player }: { player: PlayerView }) {
           <Badge variant={m.signal === "buy" ? "good" : m.signal === "sell" ? "warn" : "default"}>{m.signal}</Badge>
         </div>
         <div className="mt-1.5 flex items-end justify-between">
-          <span className="font-display text-2xl font-bold tabular-nums text-[var(--color-gold)]">
+          <span className="font-mono text-2xl font-bold tabular-nums text-[var(--color-gold)]">
             {formatCoins(player.price)}
           </span>
-          <span className="flex items-center gap-1 text-sm tabular-nums" style={{ color: up ? "var(--color-up)" : "var(--color-down)" }}>
+          <span className="flex items-center gap-1 font-mono text-sm tabular-nums" style={{ color: up ? "var(--color-up)" : "var(--color-down)" }}>
             {up ? <TrendingUp className="h-3.5 w-3.5" /> : <TrendingDown className="h-3.5 w-3.5" />}
             {Math.abs(m.trendPct).toFixed(1)}%
           </span>

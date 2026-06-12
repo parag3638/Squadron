@@ -5,7 +5,7 @@ export const metadata = { title: "Evolutions · Squadron" };
 
 export default function EvolutionsPage() {
   return (
-    <div className="mx-auto max-w-7xl px-5 pt-10 sm:px-8">
+    <div className="mx-auto max-w-[96rem] px-5 pt-10 sm:px-8">
       <header className="mb-6">
         <h1 className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">Evolutions</h1>
         <p className="mt-2 max-w-2xl text-[var(--color-muted)]">

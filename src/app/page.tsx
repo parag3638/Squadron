@@ -1,19 +1,13 @@
 import Link from "next/link";
-import {
-  Sparkles,
-  Layers,
-  Database,
-  ArrowRight,
-  Trophy,
-  TrendingDown,
-  Crown,
-} from "lucide-react";
+import { Sparkles, Layers, Database, ArrowRight, Trophy, Crown } from "lucide-react";
 import { Pitch } from "@/components/fut/Pitch";
 import { SquadSummaryCard } from "@/components/fut/SquadSummaryCard";
+import { StatTile } from "@/components/fut/StatTile";
+import { TopRatedList, ValuePicksGrid } from "@/components/home/PlayerLists";
 import { SectionHeader } from "@/components/site/Section";
 import { MarketRow } from "@/components/market/MarketRow";
-import { RARITY } from "@/components/fut/rarity";
-import { Badge } from "@/components/ui/primitives";
+import { Button } from "@/components/ui/button";
+import { Badge, LiveDot } from "@/components/ui/primitives";
 import { solveForConstraints, solveSbcById } from "@/lib/fut/solve-service";
 import { searchPlayers } from "@/lib/data/players";
 import { getSbcs } from "@/lib/data/sbcs";
@@ -53,11 +47,11 @@ export default function Home() {
   const latestNews = getNews().slice(0, 3);
 
   return (
-    <div className="mx-auto max-w-7xl px-5 pt-8 pb-4 sm:px-8">
+    <div className="mx-auto max-w-[96rem] px-5 pt-8 pb-4 sm:px-8">
       {/* launchpad */}
-      <section className="grid gap-8 lg:grid-cols-[1fr_440px] lg:gap-10">
+      <section className="grid gap-8 lg:grid-cols-[1fr_500px] lg:gap-12">
         <div className="flex flex-col">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--color-accent)]">
+          <p className="label text-[11px] text-[var(--color-accent)]">
             EA Sports FC 26 · Ultimate Team
           </p>
           <h1 className="mt-4 font-display text-[clamp(2rem,4.5vw,3.4rem)] font-extrabold leading-[0.98] tracking-tight text-balance">
@@ -91,17 +85,22 @@ export default function Home() {
               { v: String(nations.length), l: "Nations" },
               { v: String(getSbcs().length), l: "SBCs" },
             ].map((s) => (
-              <div key={s.l}>
-                <div className="font-display text-2xl font-extrabold tabular-nums">{s.v}</div>
-                <div className="mt-0.5 text-[11px] uppercase tracking-wider text-[var(--color-faint)]">{s.l}</div>
-              </div>
+              <StatTile key={s.l} value={s.v} label={s.l} size="lg" align="start" />
             ))}
           </div>
         </div>
 
         <div>
-          <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-faint)]">
-            <Crown className="h-3.5 w-3.5 text-[var(--color-gold)]" /> Squad of the Day
+          <div className="mb-2 flex items-center justify-between gap-2">
+            <div className="label flex items-center gap-2 text-[var(--color-faint)]">
+              <Crown className="h-3.5 w-3.5 text-[var(--color-gold)]" /> Squad of the Day
+            </div>
+            <Link
+              href="/build"
+              className="hidden items-center gap-1.5 text-[11px] text-[var(--color-muted)] transition-colors hover:text-[var(--color-fg)] sm:flex"
+            >
+              Open in builder <kbd className="kbd">⏎</kbd>
+            </Link>
           </div>
           <Pitch slots={squadOfDay.slots} formation={squadOfDay.formation} />
         </div>
@@ -125,19 +124,7 @@ export default function Home() {
       <section className="mt-16 grid gap-10 lg:grid-cols-2">
         <div>
           <SectionHeader title="Top rated" subtitle="The best players in FC26." action={{ label: "All players", href: "/players" }} />
-          <div className="flex flex-col gap-1.5">
-            {topPlayers.map((p, i) => (
-              <div key={p.id} className="panel flex items-center gap-3 px-3.5 py-2.5">
-                <span className="w-4 text-center font-mono text-xs text-[var(--color-faint)]">{i + 1}</span>
-                <span className="w-7 font-display text-lg font-extrabold tabular-nums" style={{ color: RARITY[p.rarity].accent }}>
-                  {p.rating}
-                </span>
-                <span className="flex-1 truncate text-sm font-medium">{p.name}</span>
-                <span className="text-xs text-[var(--color-faint)]">{p.positions[0]}</span>
-                <span className="w-16 text-right font-mono text-xs text-[var(--color-muted)]">{formatCoins(p.price)}</span>
-              </div>
-            ))}
-          </div>
+          <TopRatedList players={topPlayers} />
         </div>
 
         <div>
@@ -170,33 +157,25 @@ export default function Home() {
       <section className="mt-16 grid gap-10 lg:grid-cols-2">
         <div>
           <SectionHeader title="Value picks" subtitle="The cheapest 84+ rated players to anchor a budget squad." />
-          <div className="grid grid-cols-2 gap-1.5">
-            {bargains.map((p) => (
-              <div key={p.id} className="panel flex items-center gap-2.5 px-3 py-2">
-                <TrendingDown className="h-3.5 w-3.5 shrink-0 text-[var(--color-good)]" />
-                <span className="w-6 font-display text-base font-extrabold tabular-nums" style={{ color: RARITY[p.rarity].accent }}>
-                  {p.rating}
-                </span>
-                <span className="min-w-0 flex-1 truncate text-xs font-medium">{p.name}</span>
-                <span className="font-mono text-xs text-[var(--color-muted)]">{formatCoins(p.price)}</span>
-              </div>
-            ))}
-          </div>
+          <ValuePicksGrid players={bargains} />
         </div>
 
         <div>
           <SectionHeader title="Biggest leagues" subtitle="Where the FC26 player pool is deepest." />
           <div className="flex flex-col gap-2.5">
-            {leagues.slice(0, 8).map((l) => (
+            {leagues.slice(0, 8).map((l, i) => (
               <div key={l.name} className="flex items-center gap-3">
                 <span className="w-40 shrink-0 truncate text-xs text-[var(--color-muted)]">{l.name}</span>
-                <div className="h-2 flex-1 overflow-hidden rounded-full bg-[var(--color-surface-2)]">
+                <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[var(--color-surface-2)]">
                   <div
-                    className="h-full rounded-full bg-[var(--color-accent)]"
-                    style={{ width: `${(l.count / maxLeague) * 100}%`, opacity: 0.85 }}
+                    className="h-full rounded-full"
+                    style={{
+                      width: `${(l.count / maxLeague) * 100}%`,
+                      background: i === 0 ? "var(--color-accent)" : "var(--color-line-3)",
+                    }}
                   />
                 </div>
-                <span className="w-10 text-right font-mono text-xs tabular-nums text-[var(--color-faint)]">{l.count}</span>
+                <span className="w-10 shrink-0 text-right cell-num text-xs text-[var(--color-faint)]">{l.count}</span>
               </div>
             ))}
           </div>
@@ -218,7 +197,7 @@ export default function Home() {
           <div className="flex flex-col gap-2">
             {livePromos.map((p) => (
               <Link key={p.id} href="/news" className="panel panel-interactive flex items-center gap-3 px-4 py-3">
-                <span className="h-2 w-2 shrink-0 animate-pulse rounded-full bg-[var(--color-up)]" />
+                <LiveDot className="shrink-0" />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-semibold">{p.name}</p>
                   <p className="truncate text-xs text-[var(--color-muted)]">{p.description}</p>
@@ -246,12 +225,11 @@ export default function Home() {
               Open the builder, drop in players, and let the Gaffer finish the job. No account needed.
             </p>
           </div>
-          <Link
-            href="/build"
-            className="inline-flex items-center gap-2 rounded-full bg-[var(--color-accent)] px-6 py-3 text-sm font-semibold text-[var(--color-accent-ink)] transition-all hover:shadow-[0_0_28px_-6px_var(--color-accent-soft)]"
-          >
-            Open the Builder <ArrowRight className="h-4 w-4" />
-          </Link>
+          <Button asChild variant="primary" size="lg" className="glow-accent shrink-0">
+            <Link href="/build">
+              Open the Builder <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
         </div>
       </section>
     </div>

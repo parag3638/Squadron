@@ -20,10 +20,12 @@ const button = cva(
           "border border-[var(--color-line-2)] text-[var(--color-fg)] hover:border-[var(--color-accent-line)] hover:text-[var(--color-accent)]",
       },
       size: {
+        xs: "h-7 px-3 text-[12px]",
         sm: "h-8 px-3.5 text-[13px]",
         md: "h-10 px-5 text-sm",
         lg: "h-12 px-7 text-[15px]",
         icon: "h-10 w-10",
+        "icon-sm": "h-8 w-8",
       },
     },
     defaultVariants: { variant: "primary", size: "md" },

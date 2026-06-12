@@ -46,7 +46,7 @@ export function SquadSummaryCard({
         {top.map((p) => (
           <div key={p.id} className="flex items-center gap-2">
             <span
-              className="w-6 font-display text-sm font-extrabold tabular-nums"
+              className="w-6 font-mono text-sm font-bold tabular-nums"
               style={{ color: RARITY[p.rarity].accent }}
             >
               {p.rating}
@@ -68,7 +68,7 @@ function Stat({ label, value, color }: { label: string; value: string; color?: s
   return (
     <div className="flex flex-col">
       <span
-        className={cn("font-display text-xl font-bold tabular-nums leading-none")}
+        className={cn("font-mono text-xl font-bold tabular-nums leading-none")}
         style={{ color: color ?? "var(--color-fg)" }}
       >
         {value}

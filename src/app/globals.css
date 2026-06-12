@@ -46,16 +46,30 @@
   --color-icon: #ece2c8;
   --color-hero: #c77dff;
 
-  /* Type — typewriter everywhere (closest free match to Secret Service Typewriter) */
-  --font-sans: var(--font-typewriter), ui-monospace, "Courier New", monospace;
-  --font-mono: var(--font-typewriter), ui-monospace, "Courier New", monospace;
-  --font-display: var(--font-typewriter), ui-monospace, "Courier New", monospace;
+  /* Type — three voices: display (Archivo) · grotesque body (Hanken) · mono numerals (JetBrains) */
+  --font-sans: var(--font-grotesque), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-display-face), var(--font-grotesque), system-ui, sans-serif;
+  --font-mono: var(--font-mono-face), ui-monospace, "JetBrains Mono", "Courier New", monospace;
 
   /* Radii */
   --radius: 14px;
   --radius-sm: 10px;
   --radius-lg: 20px;
   --radius-card: 14px;
+  --radius-row: 8px;
+
+  /* Density / rhythm — the instrument grid */
+  --row-h: 38px;
+  --row-h-sm: 32px;
+  --row-h-lg: 48px;
+  --pad-cell: 10px;
+
+  /* Type scale — instrument-first, but comfortable */
+  --text-micro: 10px;
+  --text-2xs: 11px;
+  --text-xs: 13px;
+  --text-sm: 14px;
+  --text-base: 15px;
 
   /* Motion */
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
@@ -78,13 +92,17 @@
     background: var(--color-bg);
     color: var(--color-fg);
     font-family: var(--font-sans);
-    letter-spacing: -0.01em;
+    font-size: var(--text-base);
+    line-height: 1.5;
+    letter-spacing: -0.005em;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
 
   h1, h2, h3, h4 {
-    letter-spacing: -0.02em;
+    font-family: var(--font-display);
+    letter-spacing: -0.025em;
+    line-height: 1.05;
   }
 
   .tnum {
@@ -133,10 +151,11 @@
       var(--color-surface);
     border: 1px solid var(--color-line);
     border-radius: var(--radius);
+    /* machined, not floaty — tight contact shadow + a deep, soft ambient one */
     box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.05),
-      0 1px 2px rgba(0, 0, 0, 0.35),
-      0 10px 28px -16px rgba(0, 0, 0, 0.6);
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.045),
+      0 1px 1px rgba(0, 0, 0, 0.4),
+      0 8px 24px -18px rgba(0, 0, 0, 0.7);
   }
 
   .panel-2 {
@@ -177,6 +196,87 @@
   .hairline {
     border-top: 1px solid var(--color-line);
   }
+  .hairline-strong {
+    border-top: 1px solid var(--color-line-2);
+  }
+  .hairline-x {
+    width: 1px;
+    align-self: stretch;
+    background: var(--color-line);
+  }
+
+  /* Canonical dense data row — the instrument's heartbeat */
+  .data-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: var(--row-h);
+    padding-inline: var(--pad-cell);
+    border-radius: var(--radius-row);
+    transition:
+      background 0.15s var(--ease-out-soft),
+      border-color 0.15s var(--ease-out-soft);
+  }
+  .data-row:hover {
+    background: var(--color-surface-2);
+  }
+
+  /* Trading-terminal stack: collapse gaps, separate with internal hairlines */
+  .list-flush > * + * {
+    border-top: 1px solid var(--color-line);
+  }
+
+  /* Every numeric cell speaks mono + tabular */
+  .cell-num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+    letter-spacing: 0;
+  }
+
+  /* Command palette (cmdk) */
+  [cmdk-group-heading] {
+    padding: 10px 12px 4px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-faint);
+  }
+  .cmd-item {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    cursor: pointer;
+    border-radius: var(--radius-row);
+    padding: 8px 12px;
+    font-size: 13px;
+    color: var(--color-fg);
+  }
+  .cmd-item[data-selected="true"] {
+    background: var(--color-surface-2);
+  }
+  .cmd-item[data-disabled="true"] {
+    opacity: 0.4;
+  }
+
+  /* Keyboard hint pill */
+  .kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.125rem;
+    height: 18px;
+    min-width: 18px;
+    padding-inline: 5px;
+    border: 1px solid var(--color-line-2);
+    border-radius: 5px;
+    background: var(--color-surface-2);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1;
+    color: var(--color-muted);
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -185,9 +285,19 @@
 @layer utilities {
   .bg-app {
     background:
-      radial-gradient(120% 75% at 50% -15%, #0e1116 0%, transparent 55%),
-      radial-gradient(90% 60% at 100% 0%, #0b1410 0%, transparent 50%),
+      radial-gradient(125% 80% at 50% -12%, #0f1218 0%, transparent 62%),
       var(--color-bg);
+  }
+  /* Filmic grain — the single biggest "expensive product" tell. Zero JS. */
+  .bg-app::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.04;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
   .glass {
@@ -204,10 +314,11 @@
 
   .pitch-turf {
     background:
+      radial-gradient(115% 70% at 50% 0%, rgba(255, 255, 255, 0.045) 0%, transparent 48%),
       repeating-linear-gradient(
         180deg,
-        #0c130f 0px,
-        #0c130f calc(100% / 12),
+        #0d150f 0px,
+        #0d150f calc(100% / 12),
         #0a1009 calc(100% / 12),
         #0a1009 calc(100% / 6)
       );
